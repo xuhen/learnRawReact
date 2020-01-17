@@ -37,8 +37,12 @@
 		console.log(React, ReactDOM, createReactClass);
 
 		var ContactItem = createReactClass({
+			componentDidMount() {
+				console.log('ContactItem componentDidMount');
+
+			},
 			render: function () {
-				console.log('render--->', this);
+				console.log('ContactItem render--->', this);
 				return (
 					React.createElement('li', { className: 'ContactItem', key: this.props.key },
 						React.createElement('h2', { className: 'ContactItem-name' }, this.props.name),
@@ -58,7 +62,7 @@
 			},
 
 			componentDidMount() {
-				console.log('componentDidMount', this.refs);
+				console.log('ContactForm componentDidMount');
 				this.refs.name.focus();
 
 			},
@@ -140,6 +144,10 @@
 
 
 		var ContactView = createReactClass({
+			componentDidMount() {
+				console.log('ContactView componentDidMount');
+
+			},
 			render: function () {
 				var listElements = this.props.contacts
 					.filter((contact) => {
@@ -149,6 +157,8 @@
 					})
 
 				var that = this;
+
+				console.log('ContactView render', this);
 
 				return (
 					React.createElement('div', { className: 'ContactView' },
@@ -167,11 +177,64 @@
 								console.log('onSubmit', contact);
 								that.props.onSubmitNewContact(contact);
 							}
-						})
+						}),
+						React.createElement(ClassTemplete,
+							{
+								age: 34
+							},
+							React.createElement('div', {}, 'hahha')
+						)
 					)
 				)
 			}
 		});
+
+		var ClassTemplete = createReactClass({
+			getInitialState: function () {
+				return {
+					clientSideReady: false,
+					name: 'edward'
+				}
+			},
+			getDefaultProps() {
+				return {
+					doSomething: () => { },
+					age: 12
+				};
+			},
+			componentDidMount() {
+				console.log('Templete componentDidMount', this);
+
+			},
+			changeName() {
+				this.setState({
+					name: 'tom'
+				});
+			},
+			render: function () {
+				console.log('Templete render');
+				return (
+					React.createElement('div', {},
+						React.createElement('div', {}, this.state.name),
+						React.createElement(ChildTemplete, {
+							onChangeName: this.changeName
+						}),
+						this.props.children
+					)
+				)
+			}
+		})
+
+		var ChildTemplete = createReactClass({
+			render() {
+				console.log('childTemplete render', this);
+				return (
+					React.createElement('button', {
+						onClick: this.props.onChangeName
+					}, 'change name')
+				)
+			}
+		})
 
 		var state = {
 			location: {}
